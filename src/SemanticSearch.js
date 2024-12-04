@@ -23,7 +23,7 @@ const SemanticSearch = () => {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h1>Semantic Search</h1>
+      <h1>Búsqueda Semántica</h1>
       <textarea
         value={query}
         onChange={(e) => setQuery(e.target.value)}
@@ -33,19 +33,19 @@ const SemanticSearch = () => {
       />
       <br />
       <button onClick={handleSearch} style={{ padding: '10px 20px', cursor: 'pointer' }}>
-        Search
+        Buscar
       </button>
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
-      <h2>Results</h2>
+      <h2>Resultados</h2>
       {results.length > 0 ? (
         <table border="1" style={{ marginTop: '20px', width: '100%', textAlign: 'left' }}>
           <thead>
             <tr>
-              <th>Subject</th>
-              <th>Predicate</th>
-              <th>Object</th>
+              <th>Sujeto</th>
+              <th>Predicado</th>
+              <th>Objeto</th>
             </tr>
           </thead>
           <tbody>
@@ -60,7 +60,7 @@ const SemanticSearch = () => {
 
         </table>
       ) : (
-        <p>No results found.</p>
+        <p>No se encontraron resultados.</p>
       )}
     </div>
   );
