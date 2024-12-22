@@ -1,39 +1,76 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './SemanticSearch.css';
 
 const SemanticSearch = () => {
+  const [language, setLanguage] = useState('es');
   const [keywords, setKeywords] = useState('');
   const [results, setResults] = useState([]);
-  const [filteredResults, setFilteredResults] = useState([]); 
-  const [filter, setFilter] = useState(''); 
+  const [filteredResults, setFilteredResults] = useState([]);
+  const [filter, setFilter] = useState('');
   const [error, setError] = useState(null);
+
+  const translations = {
+    es: {
+      title: 'Búsqueda Semántica',
+      search: 'Buscar',
+      searchPlaceholder: 'Ingrese la búsqueda...',
+      dbpediaData: 'Datos de DBpedia',
+      mapSamsung: 'Mapear Samsung',
+      mapIphone: 'Mapear iPhone',
+      mapHuawei: 'Mapear Huawei',
+      mapRedmi: 'Mapear Redmi',
+      filter: 'Filtrar',
+      filterPlaceholder: 'Ingrese el filtro',
+      results: 'Resultados',
+      noResults: 'No se encontraron resultados.',
+      subject: 'Sujeto',
+      predicate: 'Predicado',
+      object: 'Objeto',
+    },
+    en: {
+      title: 'Semantic Search',
+      search: 'Search',
+      searchPlaceholder: 'Enter your search...',
+      dbpediaData: 'DBpedia Data',
+      mapSamsung: 'Map Samsung',
+      mapIphone: 'Map iPhone',
+      mapHuawei: 'Map Huawei',
+      mapRedmi: 'Map Redmi',
+      filter: 'Filter',
+      filterPlaceholder: 'Enter filter',
+      results: 'Results',
+      noResults: 'No results found.',
+      subject: 'Subject',
+      predicate: 'Predicate',
+      object: 'Object',
+    },
+  };
 
   const handleSearch = async () => {
     try {
       setError(null);
       const response = await axios.post('http://localhost:4000/api/keyword-search', { keywords });
       setResults(response.data);
-      setFilteredResults(response.data); 
+      setFilteredResults(response.data);
     } catch (err) {
       console.error('Error fetching data:', err);
       setError('Error executing the query. Please try again.');
     }
   };
 
-  // Cargar datos de DBpedia
   const handleDbpediaFetch = async () => {
     try {
       setError(null);
       const response = await axios.get('http://localhost:4000/api/dbpedia-mobile-phone');
       setResults(response.data);
-      setFilteredResults(response.data); // Inicializa los resultados filtrados con todos los resultados
+      setFilteredResults(response.data);
     } catch (err) {
       console.error('Error fetching data from DBpedia:', err);
       setError('Error fetching data. Please try again.');
     }
   };
 
-  // Filtrar los resultados
   const handleFilter = () => {
     const filtered = results.filter((result) =>
       result.object?.toLowerCase().includes(filter.toLowerCase())
@@ -49,126 +86,200 @@ const SemanticSearch = () => {
       return false;
     }
   };
-  
-  // Función para mapear Samsung a la ontología
+
   const handleMapSamsung = async () => {
     try {
       setError(null);
-      const response = await axios.get('http://localhost:4000/api/map-samsung');
+      const response = await axios.get('http://localhost:4000/api/map-samsung', {
+        headers: { 'Accept-Language': language }, // Envía el idioma seleccionado
+      });
       alert(response.data.message);
     } catch (err) {
       console.error('Error mapping Samsung data to ontology:', err);
-      setError('Error mapping Samsung data to ontology. Please try again.');
+      alert(language === 'es' ? 'Error: No se pudo mapear los datos de Samsung.' : 'Error: Failed to map Samsung data.');
     }
   };
+  
 
-  // Función para mapear iPhone 14 a la ontología
   const handleMapIphone14 = async () => {
     try {
       setError(null);
-      const response = await axios.get('http://localhost:4000/api/map-iphone14');
-      alert(response.data.message);
+      const response = await axios.get('http://localhost:4000/api/map-iphone14', {
+        headers: { 'Accept-Language': language }, // Envía el idioma seleccionado
+      });
+      alert(response.data.message); // Mensaje localizado del backend
     } catch (err) {
       console.error('Error mapping iPhone 14 data to ontology:', err);
-      setError('Error mapping iPhone 14 data to ontology. Please try again.');
+      alert(
+        language === 'es'
+          ? 'Error: No se pudo mapear los datos de iPhone 14. Intenta nuevamente.'
+          : 'Error: Failed to map iPhone 14 data. Please try again.'
+      );
     }
   };
+  
+  const handleMapHuaweiP50 = async () => {
+    try {
+      setError(null);
+      const response = await axios.get('http://localhost:4000/api/map-huawei-p50', {
+        headers: { 'Accept-Language': language }, // Envía el idioma seleccionado
+      });
+      alert(response.data.message); // Mensaje localizado del backend
+    } catch (err) {
+      console.error('Error mapping Huawei P50 data to ontology:', err);
+      alert(
+        language === 'es'
+          ? 'Error: No se pudo mapear los datos de Huawei P50. Intenta nuevamente.'
+          : 'Error: Failed to map Huawei P50 data. Please try again.'
+      );
+    }
+  };
+  
+  const handleMapRedmiNote5 = async () => {
+    try {
+      setError(null);
+      const response = await axios.get('http://localhost:4000/api/map-redmi-note-5', {
+        headers: { 'Accept-Language': language }, // Envía el idioma seleccionado
+      });
+      alert(response.data.message); // Mensaje localizado del backend
+    } catch (err) {
+      console.error('Error mapping Redmi Note 5 data to ontology:', err);
+      alert(
+        language === 'es'
+          ? 'Error: No se pudo mapear los datos de Redmi Note 5. Intenta nuevamente.'
+          : 'Error: Failed to map Redmi Note 5 data. Please try again.'
+      );
+    }
+  };
+  
 
   return (
+    <div className="main-container">
     <div style={{ padding: '20px' }}>
-      <h1>Búsqueda Semántica</h1>
-      {/* Entrada de búsqueda */}
+    <div className="language-switcher">
+  <button onClick={() => setLanguage('es')} className="styled-button">
+    <img
+      src="https://upload.wikimedia.org/wikipedia/commons/9/9a/Flag_of_Spain.svg"
+      alt="Español"
+      className="flag-icon"
+    />
+    Español
+  </button>
+  <button onClick={() => setLanguage('en')} className="styled-button">
+    <img
+      src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Flag_of_the_United_Kingdom_%281-2%29.svg"
+      alt="English"
+      className="flag-icon"
+    />
+    English
+  </button>
+</div>
+
+      <h1 className="title">
+        {translations[language].title.split(' ')[0]}{" "}
+        <span className="highlight">
+          {translations[language].title.split(' ')[1]}
+        </span>
+      </h1>
+
       <div>
-        <h3>Buscar Datos</h3>
-        <input
-          type="text"
-          value={keywords}
-          onChange={(e) => setKeywords(e.target.value)}
-          placeholder="Ingrese la búsqueda..."
-          style={{ width: '80%', padding: '10px', marginBottom: '20px' }}
-        />
+      
+      <div className="input-container">
+      <h3 className="search-title">{translations[language].search}</h3>
+  <input
+    type="text"
+    className="styled-input"
+    value={keywords}
+    onChange={(e) => setKeywords(e.target.value)}
+    placeholder={translations[language].searchPlaceholder}
+  />
+</div>
+
+
         <br />
-        <button onClick={handleSearch} style={{ padding: '10px 20px', cursor: 'pointer' }}>
-          Buscar
-        </button>
-        <button
-          onClick={handleDbpediaFetch}
-          style={{ padding: '10px 20px', cursor: 'pointer', marginLeft: '10px' }}
-        >
-          Datos de DBpedia
-        </button>
-        <button
-          onClick={handleMapSamsung}
-          style={{ padding: '10px 20px', cursor: 'pointer', marginLeft: '10px' }}
-        >
-          Mapear Samsung
-        </button>
-        <button
-          onClick={handleMapIphone14}
-          style={{ padding: '10px 20px', cursor: 'pointer', marginLeft: '10px' }}
-        >
-          Mapear iPhone 14
-        </button>
+        <div className="button-container">
+  <button onClick={handleSearch} className="styled-button">
+    {translations[language].search}
+  </button>
+  <button onClick={handleDbpediaFetch} className="styled-button">
+    {translations[language].dbpediaData}
+  </button>
+  <button onClick={handleMapSamsung} className="styled-button">
+    {translations[language].mapSamsung}
+  </button>
+  <button onClick={handleMapIphone14} className="styled-button">
+    {translations[language].mapIphone}
+  </button>
+  <button onClick={handleMapHuaweiP50} className="styled-button">
+    {translations[language].mapHuawei}
+  </button>
+  <button onClick={handleMapRedmiNote5} className="styled-button">
+    {translations[language].mapRedmi}
+  </button>
+</div>
+
       </div>
 
-      {/* Entrada y botón de filtro */}
-      <div style={{ marginTop: '20px' }}>
-        <h3>Buscar Datos de DBpedia</h3>
-        <input
-          type="text"
-          placeholder="Ingrese la búsqueda"
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          style={{ width: '80%', padding: '10px', marginBottom: '20px' }}
-        />
-        <br />
-        <button onClick={handleFilter} style={{ padding: '10px 20px', cursor: 'pointer' }}>
-          Buscar
-        </button>
-      </div>
+      <div className="filter-container">
+  <h3 className="search-title">{translations[language].filter}</h3>
+  <input
+    type="text"
+    className="styled-input"
+    placeholder={translations[language].filterPlaceholder}
+    value={filter}
+    onChange={(e) => setFilter(e.target.value)}
+  />
+  <div className="button-container">
+    <button onClick={handleFilter} className="styled-button">
+      {translations[language].filter}
+    </button>
+  </div>
+</div>
 
-      {/* Mostrar resultados */}
+
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
-      <h2>Resultados</h2>
-      {filteredResults.length > 0 ? (
-        <table border="1" style={{ marginTop: '20px', width: '100%', textAlign: 'left' }}>
-          <thead>
-            <tr>
-              <th>Sujeto</th>
-              <th>Predicado</th>
-              <th>Objeto</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredResults.map((result, index) => (
-              <tr key={index}>
-                <td>{result.subject ? result.subject.split('#').pop() : 'N/A'}</td>
-                <td>
-                  {result.predicate
-                    ? result.predicate.split('#').pop() || result.predicate.split('/').pop()
-                    : 'N/A'}
-                </td>
-                <td>
-                  {result.object ? (
-                    isURL(result.object) ? (
-                      <a href={result.object} target="_blank" rel="noopener noreferrer">
-                        {result.object.split('#').pop() || result.object}
-                      </a>
-                    ) : (
-                      result.object
-                    )
-                  ) : (
-                    'N/A'
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p>No se encontraron resultados.</p>
-      )}
+      <h2 className="results-title">{translations[language].results}</h2>
+{filteredResults.length > 0 ? (
+  <table className="styled-table">
+    <thead>
+      <tr>
+        <th>{translations[language].subject}</th>
+        <th>{translations[language].predicate}</th>
+        <th>{translations[language].object}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {filteredResults.map((result, index) => (
+        <tr key={index}>
+          <td>{result.subject ? result.subject.split('#').pop() : 'N/A'}</td>
+          <td>
+            {result.predicate
+              ? result.predicate.split('#').pop() || result.predicate.split('/').pop()
+              : 'N/A'}
+          </td>
+          <td>
+            {result.object ? (
+              isURL(result.object) ? (
+                <a href={result.object} target="_blank" rel="noopener noreferrer">
+                  {result.object.split('#').pop() || result.object}
+                </a>
+              ) : (
+                result.object
+              )
+            ) : (
+              'N/A'
+            )}
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+) : (
+  <p className="no-results">{translations[language].noResults}</p>
+)}
+
+    </div>
     </div>
   );
 };
