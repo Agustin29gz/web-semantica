@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './SemanticSearch.css';
+import imagen1 from "../src/assets/imagenFondo.png";
+
 
 const SemanticSearch = () => {
   const [language, setLanguage] = useState('es');
@@ -13,6 +15,7 @@ const SemanticSearch = () => {
   const translations = {
     es: {
       title: 'Búsqueda Semántica',
+      imageTitle: 'Celulares',
       search: 'Buscar',
       searchPlaceholder: 'Ingrese la búsqueda...',
       dbpediaData: 'Datos de DBpedia',
@@ -30,6 +33,7 @@ const SemanticSearch = () => {
     },
     en: {
       title: 'Semantic Search',
+      imageTitle: 'Cell Phones',
       search: 'Search',
       searchPlaceholder: 'Enter your search...',
       dbpediaData: 'DBpedia Data',
@@ -183,7 +187,15 @@ const SemanticSearch = () => {
       </h1>
 
       <div>
-      
+      <div className="image-container">
+  <img
+    src={imagen1} 
+    alt="Logo"
+    className="background-image"
+  />
+  <div className="image-title">{translations[language].imageTitle}</div>
+</div>
+
       <div className="input-container">
       <h3 className="search-title">{translations[language].search}</h3>
   <input
