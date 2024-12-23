@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import Alert from './Alert';
+import { Modal } from "./Modal";
 import './SemanticSearch.css';
 import imagen1 from "../src/assets/imagenFondo.png";
 
 
 const SemanticSearch = () => {
   const [language, setLanguage] = useState('es');
-  const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const [keywords, setKeywords] = useState('');
   const [results, setResults] = useState([]);
   const [filteredResults, setFilteredResults] = useState([]);
   const [filter, setFilter] = useState('');
   const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [mensaje, setMensaje] = useState("");
+  const [confirmacion, setConfirmacion] = useState("");
 
   const translations = {
     es: {
@@ -102,88 +104,137 @@ const SemanticSearch = () => {
     }
   };
 
-  const showAlert = (message, type) => {
-    setAlert({ show: true, message, type });
-    setTimeout(() => setAlert({ show: false, message: '', type: '' }), 4000); 
-  };
 
   const handleMapSamsung = async () => {
     try {
-      const response = await axios.get('http://localhost:4000/api/map-samsung', {
-        headers: { 'Accept-Language': language },
-      });
-      showAlert(response.data.message, 'success'); 
-    } catch (err) {
-      console.error('Error mapping Samsung data to ontology:', err);
-      showAlert(
-        language === 'es' ? 'Error: No se pudo mapear los datos de Samsung.' : 'Error: Failed to map Samsung data.',
-        'error'
+      setError(null);
+      const response = await axios.get(
+        "http://localhost:4000/api/map-samsung",
+        {
+          headers: { "Accept-Language": language }, 
+        }
       );
+      
+      setMensaje(
+        language === "es"
+          ? response.data.message
+          : "Samsung data inserted successfully"
+      );
+      setConfirmacion(language === "es" ? "Correcto" : "Correct");
+      setIsModalOpen(true);
+    } catch (err) {
+      console.error("Error mapping Samsung data to ontology:", err);
+      
+      setMensaje(
+        language === "es"
+          ? "Error: No se pudo mapear los datos de Samsung."
+          : "Error: Failed to map Samsung data."
+      );
+      setConfirmacion("Incorrecto");
+      setConfirmacion(language === "es" ? "Incorrecto" : "Incorrect");
+      setIsModalOpen(true);
     }
   };
-  
 
   const handleMapIphone14 = async () => {
     try {
       setError(null);
-      const response = await axios.get('http://localhost:4000/api/map-iphone14', {
-        headers: { 'Accept-Language': language }, 
-      });
-      showAlert(response.data.message, 'success'); 
+      const response = await axios.get(
+        "http://localhost:4000/api/map-iphone14",
+        {
+          headers: { "Accept-Language": language }, 
+        }
+      );
+      
+      setMensaje(
+        language === "es"
+          ? response.data.message
+          : "Iphone 14 data inserted successfully"
+      );
+      setConfirmacion(language === "es" ? "Correcto" : "Correct");
+      setIsModalOpen(true);
     } catch (err) {
-      console.error('Error mapping iPhone 14 data to ontology:', err);
-      showAlert(
-        language === 'es'
-          ? 'Error: No se pudo mapear los datos de iPhone 14. Intenta nuevamente.'
-          : 'Error: Failed to map iPhone 14 data. Please try again.',
-        'error'
-      ); 
+      console.error("Error mapping iPhone 14 data to ontology:", err);
+      
+      setMensaje(
+        language === "es"
+          ? "Error: No se pudo mapear los datos de iPhone 14. Intenta nuevamente."
+          : "Error: Failed to map iPhone 14 data. Please try again."
+      );
+      setConfirmacion("Incorrecto");
+      setConfirmacion(language === "es" ? "Incorrecto" : "Incorrect");
+      setIsModalOpen(true);
     }
   };
-  
-  
+
   const handleMapHuaweiP50 = async () => {
     try {
       setError(null);
-      const response = await axios.get('http://localhost:4000/api/map-huawei-p50', {
-        headers: { 'Accept-Language': language }, 
-      });
-      showAlert(response.data.message, 'success'); 
+      const response = await axios.get(
+        "http://localhost:4000/api/map-huawei-p50",
+        {
+          headers: { "Accept-Language": language }, 
+        }
+      );
+      
+      setMensaje(
+        language === "es"
+          ? response.data.message
+          : "Huaweip50 data inserted successfully"
+      );
+      setConfirmacion(language === "es" ? "Correcto" : "Correct");
+      setIsModalOpen(true);
     } catch (err) {
-      console.error('Error mapping Huawei P50 data to ontology:', err);
-      showAlert(
-        language === 'es'
-          ? 'Error: No se pudo mapear los datos de Huawei P50. Intenta nuevamente.'
-          : 'Error: Failed to map Huawei P50 data. Please try again.',
-        'error'
-      ); 
+      console.error("Error mapping Huawei P50 data to ontology:", err);
+      
+      setMensaje(
+        language === "es"
+          ? "Error: No se pudo mapear los datos de Huawei P50. Intenta nuevamente."
+          : "Error: Failed to map Huawei P50 data. Please try again."
+      );
+      setConfirmacion("Incorrecto");
+      setConfirmacion(language === "es" ? "Incorrecto" : "Incorrect");
+      setIsModalOpen(true);
     }
   };
-  
-  
-  const handleMapRedmiNote5 = async () => {
-  try {
-    setError(null);
-    const response = await axios.get('http://localhost:4000/api/map-redmi-note-5', {
-      headers: { 'Accept-Language': language }, 
-    });
-    showAlert(response.data.message, 'success'); 
-  } catch (err) {
-    console.error('Error mapping Redmi Note 5 data to ontology:', err);
-    showAlert(
-      language === 'es'
-        ? 'Error: No se pudo mapear los datos de Redmi Note 5. Intenta nuevamente.'
-        : 'Error: Failed to map Redmi Note 5 data. Please try again.',
-      'error'
-    ); 
-  }
-};
 
-  
+  const handleMapRedmiNote5 = async () => {
+    try {
+      setError(null);
+      const response = await axios.get(
+        "http://localhost:4000/api/map-redmi-note-5",
+        {
+          headers: { "Accept-Language": language }, 
+        }
+      );
+      
+      setMensaje(
+        language === "es"
+          ? response.data.message
+          : "RedmiNote5 data inserted successfully"
+      );
+      setConfirmacion(language === "es" ? "Correcto" : "Correct");
+      setIsModalOpen(true);
+    } catch (err) {
+      console.error("Error mapping Redmi Note 5 data to ontology:", err);
+      
+      setMensaje(
+        language === "es"
+          ? "Error: No se pudo mapear los datos de Redmi Note 5. Intenta nuevamente."
+          : "Error: Failed to map Redmi Note 5 data. Please try again."
+      );
+      setConfirmacion("Incorrecto");
+      setConfirmacion(language === "es" ? "Incorrecto" : "Incorrect");
+      setIsModalOpen(true);
+    }
+  };
+
+const closeModal = () => {
+  setIsModalOpen(false);
+};
 
   return (
     <div className="main-container">
-      {alert.show && <Alert message={alert.message} type={alert.type} />}
     <div style={{ padding: '20px' }}>
     <div className="language-switcher">
   <button onClick={() => setLanguage('es')} className="styled-button">
@@ -317,6 +368,12 @@ const SemanticSearch = () => {
 )}
 
     </div>
+    <Modal
+        isOpen={isModalOpen}
+        mensaje={mensaje}
+        closeModal={closeModal}
+        confirmacion={confirmacion}
+      />
     </div>
   );
 };
